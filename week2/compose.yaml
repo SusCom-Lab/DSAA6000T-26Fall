@@ -1,0 +1,46 @@
+name: ${COMPOSE_PROJECT_NAME:-week2-llama}
+x-service-environment: &service-environment
+  SERVICE_PORT: ${SERVICE_PORT:-8000}
+  CPU_THREADS: ${CPU_THREADS:-32}
+x-backend: &backend
+  image: ${IMAGE_NAME:-dsaa6000t-week2-llama:latest}
+  build: .
+  restart: unless-stopped
+  volumes:
+    - type: bind
+      source: ${MODEL_PATH:?Set MODEL_PATH in week2/.env}
+      target: /model
+      read_only: true
+      bind:
+        create_host_path: false
+  healthcheck:
+    test: [CMD, python, -c, "import json,os,urllib.request; port=os.environ['SERVICE_PORT']; assert json.load(urllib.request.urlopen('http://localhost:'+port+'/health'))['status']=='ready'"]
+    interval: 15s
+    timeout: 5s
+    start_period: 180s
+    retries: 3
+services:
+  cpu-backend:
+    <<: *backend
+    environment:
+      <<: *service-environment
+      ROLE: cpu
+      NVIDIA_VISIBLE_DEVICES: void
+      CUDA_VISIBLE_DEVICES: ""
+  gpu-backend:
+    <<: *backend
+    environment:
+      <<: *service-environment
+      ROLE: gpu
+    devices:
+      - ${GPU_DEVICE:-nvidia.com/gpu=unresolved}
+  router:
+    image: ${IMAGE_NAME:-dsaa6000t-week2-llama:latest}
+    build: .
+    restart: unless-stopped
+    environment:
+      <<: *service-environment
+      ROLE: router
+      NVIDIA_VISIBLE_DEVICES: void
+    ports:
+      - ${ROUTER_BIND_HOST:-127.0.0.1}:${ROUTER_PORT:-8080}:${SERVICE_PORT:-8000}

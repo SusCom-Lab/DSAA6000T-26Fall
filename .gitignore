@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .venv/
 week1/.env
+week2/.env
 profile-results/
 models/
 *.safetensors
@@ -10,3 +11,6 @@ pytorch_model*.bin
 *.pt
 *.pth
 .DS_Store
+docker-images/
+week2-temp.md 
+week02_copy_active.pptx
