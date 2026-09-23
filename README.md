@@ -31,6 +31,7 @@ This repository provides implementations and supplementary materials for the sys
 | 1 | Profiling the components of a Llama 8B model | [Week 1 guide](week1/README.md) · [Jupyter notebook](week1/llama8b_component_profiling.ipynb) |
 | 2 | Persistent Llama CPU/GPU services, routing, and fallback | [Week 2 guide](week2/README.md) · [Demo runner](week2/run_demo.sh) |
 | 3 | Runtime primitives, scheduling policies, and cross-stream synchronization | [Week 3 guide](week3/README.md) · [Demo runner](week3/run_demo.sh) |
+| 4 | Backend capabilities, shape constraints, precision promotion, and CPU fallback | [Week 4 guide](week4/README.md) · [Demo runner](week4/run_demo.sh) |
 
 ## How to use this repository
 
