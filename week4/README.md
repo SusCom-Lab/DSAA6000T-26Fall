@@ -4,40 +4,20 @@ Implement the Case B demo in `week04.md`: the same application requests
 `Y = X @ W + b`, while the runtime chooses an operator path, compute precision,
 and device from declared capabilities and runtime probes.
 
-One RTX 5090 is sufficient. The demo uses small matrices, ordinary PyTorch
-operations, and no model checkpoints. All four scenarios run sequentially.
+The demo uses small matrices, ordinary PyTorch operations, and no model
+checkpoints. All four scenarios run sequentially.
 
-## Setup for RTX 5090
+## Prerequisites
 
-Use a PyTorch CUDA build that supports Blackwell. CUDA 12.6 wheels do **not**
-support the RTX 5090. PyTorch introduced Blackwell support with its CUDA 12.8
-builds; current CUDA 13.x builds are suitable with a compatible NVIDIA driver.
+Use an existing Python environment with PyTorch compatible with your device.
+The first three scenarios require a working CUDA backend; the CPU fallback
+scenario can run without a GPU.
 
-For a separate environment on Linux:
-
-```bash
-cd DSAA6000T/week4
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install torch --index-url https://download.pytorch.org/whl/cu130
-```
-
-The CUDA 13.0 build requires Linux driver 580.65.06 or newer. Check your driver
-with `nvidia-smi`. The locally installed CUDA toolkit version alone does not
-identify the CUDA build bundled with PyTorch; the demo prints
-`torch.__version__` and `torch.version.cuda`.
-
-You can also use an existing compatible environment:
-
-```bash
-cp -n env.example .env
-# Edit .env to set PYTHON to that environment's Python executable.
-./run_demo.sh capabilities
-./run_demo.sh check
-```
+## Runtime configuration
 
 The wrapper works from any directory, loads `week4/.env` when present, and
 defaults to GPU 0. It sets visibility before importing PyTorch.
+Optionally copy `env.example` to `.env` to select your Python executable and GPU.
 
 | Setting | Default | Meaning |
 | --- | --- | --- |
@@ -50,6 +30,7 @@ An existing `.env` overrides exported values. Direct invocation with
 ## Run the four scenarios
 
 ```bash
+cd DSAA6000T/week4
 ./run_demo.sh capabilities                 # declarations and real device probes
 ./run_demo.sh check                        # all four scenarios
 ./run_demo.sh check --scenario baseline
@@ -158,5 +139,3 @@ Validated locally on one RTX 5090 with PyTorch `2.13.0+cu130` and NVIDIA driver
 ## References
 
 - [PyTorch installation selector](https://pytorch.org/get-started/locally/)
-- [PyTorch 2.7: Blackwell and CUDA 12.8 support](https://pytorch.org/blog/pytorch-2-7/)
-- [PyTorch 2.12: CUDA packaging and driver requirements](https://pytorch.org/blog/pytorch-2-12-release-blog/)
